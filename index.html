@@ -1,0 +1,235 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>FlutterSpot</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/4.29/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.29/"></script>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+      /* Header styles */
+      header {
+            background-color: green;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: green;
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+      #add {
+          margin-bottom: 5px;
+      }
+      #actions {
+          padding: 5px;
+      }
+    .button {
+        display: inline-block;
+        padding: 10px 20px;
+     background-color: #007bff; /* Blue color */
+        color: white;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .button:hover {
+        background-color: #0056b3; /* Darker shade of blue on hover */
+    }
+
+    .esri-button {
+         background-color: #0079c1;
+        border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s;
+    }
+     .esri-button:hover {
+            background-color: #005d8f;
+     }
+     #ButterToggle {
+        bottom: 50px; /* Adjust this value as needed to move the checkboxes up */
+        position: relative;
+    }
+        
+    </style>
+
+    <script>
+      require([
+          "esri/Map",
+          "esri/views/MapView",
+          "esri/Basemap",
+          "esri/layers/VectorTileLayer",
+          "esri/widgets/LayerList",
+          "esri/layers/FeatureLayer",
+          "esri/Graphic",
+          "esri/widgets/Legend"
+      ], (
+          Map,
+          MapView,
+          Basemap,
+          VectorTileLayer,
+          LayerList,
+          FeatureLayer,
+          Graphic,
+          Legend
+         
+      ) => {
+        // create map using custom basemap from ArcGIS Online
+        const map = new Map({
+          basemap: new Basemap({
+            baseLayers: [
+               new VectorTileLayer({
+                   portalItem: {id: "474f0cb226884dd68f707ab0f2f1aa10"}
+               })
+            ],
+            referenceLayers: [
+                new VectorTileLayer({
+                    portalItem: {id: "1768e8369a214dfab4e2167d5c5f2454"}
+                })
+            ]
+          })
+        });
+
+        const view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 3,
+          center: [-98.5833, 39.83] // longitude, latitude
+        });
+
+        
+        const butterflyLayers = [];
+for (let i = 1; i <= 38; i++) {
+    const layer = new FeatureLayer({
+        url: `https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/Butterfly_Map_WEB_WFL1/FeatureServer/${i}`,
+        visible: false // Initially set all layers to invisible
+    });
+    butterflyLayers.push(layer);
+    map.layers.add(layer);
+
+  }
+        
+    for (let i = 0; i < butterflyLayers.length; i++) {
+    const checkbox = document.getElementById(`Butterfly${i}`);
+    checkbox.addEventListener('change', function() {
+        butterflyLayers[i].visible = this.checked;
+    });
+}
+        
+        const legend = new Legend({
+          view: view
+        });
+        view.ui.add(legend, "top-left");
+        
+          // Get references to the button and the checkbox list
+    const expandButton = document.getElementById("expandButton");
+    const checkboxList = document.getElementById("ButterToggle").querySelector(".esri-widget");
+
+    // Hide the checkbox list initially
+    checkboxList.style.display = "none";
+
+    // Add event listener to the button
+   expandButton.addEventListener("click", () => {
+    // Toggle the visibility of the checkbox list when the button is clicked
+   if (checkboxList.style.display === "none") {
+      checkboxList.style.display = "block";
+      expandButton.textContent = "Collapse Species List";
+      expandButton.querySelector("button").className = "esri-button expanded";
+    } else {
+      checkboxList.style.display = "none";
+      expandButton.textContent = "Expand Species List";
+      expandButton.querySelector("button").className = "esri-button collapsed";
+    }
+    }); 
+    const addBtn = document.getElementById("add");
+    const removeBtn = document.getElementById("remove");
+
+
+      
+        view.ui.add(document.getElementById("ButterToggle"), "bottom-right");
+
+        view.ui.add(document.getElementById("expandButton"), "top-right");
+        
+    })
+    </script>
+  </head>
+
+  <body>
+    
+    <header>
+        <h1>FlutterSpot</h1>
+    </header>
+    <div id="viewDiv"></div>
+    <div id="ToggleButton" class="esri-widget">
+        <button class="esri-button" id="expandButton">Expand Button </button>
+    </div>
+    <div id="ButterToggle" class="esri-widget">
+      <div class="esri-widget">
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly0"  /> Oak Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly1"  /> White M Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly2"  /> Western Pygmy Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly3"  /> Western Pine Elfin </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly4"  /> Thecla Hyperici </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly5"  /> Summer Azure </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly6"  /> Striped Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly7"  /> Spring Azure </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly8"  /> Siva' Juniper Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly9"  /> Silver-Banded Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly10" /> Red-Banded Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly11" /> Reakirt's Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly12" /> Pearly-Gray Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly13" /> Miami Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly14" /> Amethst Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly15"  /> Atala </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly16"  /> Bartrams's Scrub-Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly17"  /> Brown Elfin </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly18"  /> California Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly19"  /> Cassius Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly20" /> Ceraunus Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly21" /> Eastern Pigmy Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly22" /> Coral Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly23" /> Eastern Pine Elfin </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly24" /> Eastern Tailed-Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly25" /> Frosted Elfin </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly26" /> Gray Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly27" /> Gray Ministreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly28" /> Great Purple Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly29" /> Hanno Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly30" /> Harvester </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly31" /> Henry's Elfin </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly32" /> Hessel's Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly33" /> Juniper Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly34" /> King's Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly35" /> Mallow Scrub-Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly36" /> Marine Blue </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly37" /> Martial Scrub Hairstreak </span>
+    
+    </div>
+    <footer>
+        <a href="https://www.example.com" class="button" target="_blank">Take our Survey to add data to the map!</a>
+    </footer>
+
+
+  </body>
+  
+</html>
