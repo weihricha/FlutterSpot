@@ -63,6 +63,8 @@
 
     .esri-button {
          background-color: #0079c1;
+         margin: 5px;
+         padding: 10px 20px;
         border: none;
             border-radius: 4px;
             cursor: pointer;
@@ -73,7 +75,21 @@
       background-color: #005d8f;
      }
      
-        
+     
+     .esri-widget {
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 300px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.esri-widget span {
+    flex: 1 1 50%; /* Each checkbox takes up 50% of the width */
+}
+
+.esri-widget input[type="checkbox"] {
+    margin: 5px; /* Add some margin around each checkbox */
+}
     </style>
 
     <script>
@@ -123,7 +139,7 @@
 
         
         const butterflyLayers = [];
-for (let i = 1; i <= 38; i++) {
+for (let i = 1; i <= 38; i++) { //creates butterfly layers
     const layer = new FeatureLayer({
         url: `https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/Butterfly_Map_WEB_WFL1/FeatureServer/${i}`,
         visible: false // Initially set all layers to invisible
@@ -133,15 +149,16 @@ for (let i = 1; i <= 38; i++) {
 
   }
         
-    for (let i = 0; i < butterflyLayers.length; i++) {
+    for (let i = 0; i < butterflyLayers.length; i++) { //checkbox logic
     const checkbox = document.getElementById(`Butterfly${i}`);
     checkbox.addEventListener('change', function() {
         butterflyLayers[i].visible = this.checked;
     });
 }
-/*const surveylayer = new FeatureLayer({ 
+const surveylayer = new FeatureLayer({ 
   // Adding survey123 data to map
    url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_df7972f70f1b4fdd98447f9dc510cb5e_results/FeatureServer",
+   visible:false,
    renderer: {
     type: "simple", 
     symbol: {
@@ -154,24 +171,27 @@ for (let i = 1; i <= 38; i++) {
       title: "User spotted butterfly: {field_8}",
       content: "<p>This butterfly was spotted {date_and_time_of_the_report}</p>" + "{Photos And Files}" +
         "<p> Observations about this butterfly: </p>" + "<li>{notes}</li>",
+      showAttachments: true
       
     }
   })
-  //map.add(surveylayer)*/
+  map.add(surveylayer)
   
         
-        const legend = new Legend({
-          view: view
-        });
-        view.ui.add(legend, "top-left");
+  const legend = new Legend({
+    view: view
+});
+        
+      view.ui.add(legend, "top-left");
         
           // Get references to the button and the checkbox list
     const expandButton = document.getElementById("expandButton");
     const checkboxList = document.getElementById("ButterToggle").querySelector(".esri-widget");
+    const userButton = document.getElementById("userButton");
 
     // Hide the checkbox list initially
     checkboxList.style.display = "none";
-
+    
     // Add event listener to the button
    expandButton.addEventListener("click", () => {
     // Toggle the visibility of the checkbox list when the button is clicked
@@ -185,14 +205,26 @@ for (let i = 1; i <= 38; i++) {
       expandButton.querySelector("button").className = "esri-button collapsed";
     }
     }); 
-    const addBtn = document.getElementById("add");
-    const removeBtn = document.getElementById("remove");
+     // Add event listener to the button
+     userButton.addEventListener("click", () => {
+    // Toggle the visibility of the surveylayer when the button is clicked
+    if (!surveylayer.visible) { // Check if it's false
+        surveylayer.visible = true;
+        userButton.textContent = "Remove User Entered Data";
+        userButton.querySelector("button").className = "esri-button expanded";
+    } else {
+        surveylayer.visible = false;
+        userButton.textContent = "Show User Entered Data";
+        userButton.querySelector("button").className = "esri-button collapsed";
+    }
+});
 
 
       
         view.ui.add(document.getElementById("ButterToggle"), "bottom-right");
-
         view.ui.add(document.getElementById("expandButton"), "top-right");
+        view.ui.add(document.getElementById("userButton"), "top-right");
+       
         
     })
     </script>
@@ -206,12 +238,14 @@ for (let i = 1; i <= 38; i++) {
     <div id="viewDiv"></div>
     <div id="ToggleButton"  class="esri-widget">
         <button class="esri-button" id="expandButton">Expand Species</button>
+        <button class="esri-button" id="userButton">Show User Entered Data</button>
     </div>
     <footer>
-      <a href="https://arcg.is/0ze9bL" class="button" target="_blank" >Take our Survey to add data to the map!</a>
+      <a href="https://arcg.is/0ze9bL" class="button" >Take our Survey to add data to the map!</a>
   </footer>
     <div id="ButterToggle" class="esri-widget">
       <div class="esri-widget">
+        <h2> Butterfly Species </h2>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly0"  /> Oak Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly1"  /> White M Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly2"  /> Western Pygmy Blue </span>
