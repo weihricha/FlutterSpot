@@ -85,7 +85,8 @@
           "esri/widgets/LayerList",
           "esri/layers/FeatureLayer",
           "esri/Graphic",
-          "esri/widgets/Legend"
+          "esri/widgets/Legend",
+          "esri/popup/content/ImageMediaInfo"
       ], (
           Map,
           MapView,
@@ -138,6 +139,26 @@ for (let i = 1; i <= 38; i++) {
         butterflyLayers[i].visible = this.checked;
     });
 }
+/*const surveylayer = new FeatureLayer({ 
+  // Adding survey123 data to map
+   url: "https://services.arcgis.com/LBbVDC0hKPAnLRpO/arcgis/rest/services/survey123_df7972f70f1b4fdd98447f9dc510cb5e_results/FeatureServer",
+   renderer: {
+    type: "simple", 
+    symbol: {
+      type: "web-style", // autocasts as new WebStyleSymbol()
+              styleName: "Esri2DPointSymbolsStyle",
+              name: "trail"  
+      }
+    },
+    popupTemplate: {
+      title: "User spotted butterfly: {field_8}",
+      content: "<p>This butterfly was spotted {date_and_time_of_the_report}</p>" + "{Photos And Files}" +
+        "<p> Observations about this butterfly: </p>" + "<li>{notes}</li>",
+      
+    }
+  })
+  //map.add(surveylayer)*/
+  
         
         const legend = new Legend({
           view: view
@@ -183,15 +204,15 @@ for (let i = 1; i <= 38; i++) {
         <h1>FlutterSpot</h1>
     </header>
     <div id="viewDiv"></div>
-    <div id="ToggleButton" class="esri-widget">
-        <button class="esri-button" id="expandButton">Expand Button </button>
+    <div id="ToggleButton"  class="esri-widget">
+        <button class="esri-button" id="expandButton">Expand Species</button>
     </div>
     <footer>
-      <a href="https://www.example.com" class="button" target="_blank">Take our Survey to add data to the map!</a>
+      <a href="https://arcg.is/0ze9bL" class="button" target="_blank" >Take our Survey to add data to the map!</a>
   </footer>
     <div id="ButterToggle" class="esri-widget">
       <div class="esri-widget">
-        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly0"  /> Oak Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly0"  /> Oak Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly1"  /> White M Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly2"  /> Western Pygmy Blue </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly3"  /> Western Pine Elfin </span>
@@ -205,7 +226,7 @@ for (let i = 1; i <= 38; i++) {
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly11" /> Reakirt's Blue </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly12" /> Pearly-Gray Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly13" /> Miami Blue </span>
-        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly14" /> Amethst Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly14" /> Amethyst Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly15"  /> Atala </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly16"  /> Bartrams's Scrub-Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly17"  /> Brown Elfin </span>
@@ -217,15 +238,15 @@ for (let i = 1; i <= 38; i++) {
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly23" /> Eastern Pine Elfin </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly24" /> Eastern Tailed-Blue </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly25" /> Frosted Elfin </span>
-        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly26" /> Gray Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly26" /> Gray Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly27" /> Gray Ministreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly28" /> Great Purple Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly29" /> Hanno Blue </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly30" /> Harvester </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly31" /> Henry's Elfin </span>
-        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly32" /> Hessel's Hairsteak </span>
-        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly33" /> Juniper Hairsteak </span>
-        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly34" /> King's Hairsteak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly32" /> Hessel's Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly33" /> Juniper Hairstreak </span>
+        <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly34" /> King's Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly35" /> Mallow Scrub-Hairstreak </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly36" /> Marine Blue </span>
         <span id="layerToggle" class="esri-widget"> <input type="checkbox" id="Butterfly37" /> Martial Scrub Hairstreak </span>
